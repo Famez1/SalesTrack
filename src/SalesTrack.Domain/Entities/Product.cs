@@ -28,6 +28,11 @@ public class Product : IAuditableEntity
     public decimal Price { get; set; }
 
     /// <summary>
+    /// Еденица измерения
+    /// </summary>
+    public string Unit { get; set; }
+
+    /// <summary>
     /// Дата создания записи
     /// </summary>
     public DateTime CreatedAt { get; set; }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SalesTrack.Persistence;
@@ -11,9 +12,11 @@ using SalesTrack.Persistence;
 namespace SalesTrack.Persistence.Migrations
 {
     [DbContext(typeof(SalesTrackDbContext))]
-    partial class SalesTrackDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250519145224_AddColumn_Unit_Product")]
+    partial class AddColumn_Unit_Product
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
