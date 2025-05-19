@@ -28,6 +28,7 @@ public static class ServiceCollectionExtensions
     public static void ConfigureAutoMapper(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAutoMapper(typeof(Api.Mappings.AuthenticationMappingProfile).Assembly);
+        services.AddAutoMapper(typeof(Application.Mappings.ProductMappingProfile).Assembly);
     }
 
     public static IServiceCollection AddJwtTokenAuth(this IServiceCollection services, IConfiguration configuration)
