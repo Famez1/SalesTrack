@@ -7,7 +7,7 @@ using SalesTrack.Contracts.Dto;
 
 namespace SalesTrack.Api.Controllers.V1.Authentication;
 
-[Route("api/auth")]
+[Route("api/v1/[controller]")]
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
