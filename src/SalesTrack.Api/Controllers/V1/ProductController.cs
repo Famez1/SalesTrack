@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalesTrack.Api.Contracts;
 using SalesTrack.Application.Handlers.Products.Commands.AddProduct;
@@ -16,6 +17,7 @@ public class ProductController(
     /// <summary>
     /// Добавить товар в список товаров
     /// </summary>
+    [Authorize] 
     [HttpPost]
     public async Task<ApiResponseV1> AddProductAsync([FromBody] AddProductDto addProductDto)
     {
