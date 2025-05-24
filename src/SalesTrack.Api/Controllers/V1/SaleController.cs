@@ -14,6 +14,11 @@ public class SaleController(
     IMediator mediator,
     IMapper mapper) : ControllerBase
 {
+    /// <summary>
+    /// Добавить запись о продаже
+    /// </summary>
+    /// <param name="addSaleDto"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<ApiResponseV1> AddSaleAsync(AddSaleDto addSaleDto)
     {
@@ -22,6 +27,11 @@ public class SaleController(
         return new ApiResponseV1();
     }
 
+    /// <summary>
+    /// Получить записи о продаже
+    /// </summary>
+    /// <param name="getSalesDto"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<ApiResponseV1<List<GetSalesResponseDto>>> GetSalesAsync([FromQuery] GetSalesDto getSalesDto)
     {

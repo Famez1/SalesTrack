@@ -35,6 +35,12 @@ public class InventoryController(
         return new ApiResponseV1();
     }
 
+    /// <summary>
+    /// Получить остатки товаров на складе
+    /// </summary>
+    /// <param name="getInventoriesDto"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<ApiResponseV1<GetInventoriesResponseDto>> GetInventoriesAsync(
         [FromQuery] GetInventoriesDto getInventoriesDto,
