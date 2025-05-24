@@ -3,8 +3,10 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalesTrack.Api.Contracts;
+using SalesTrack.Application.Handlers.Categories.Queries;
 using SalesTrack.Application.Handlers.Products.Commands.AddProduct;
 using SalesTrack.Application.Handlers.Products.Commands.UpdateProduct;
+using SalesTrack.Application.Handlers.Products.Queries.GetProducts;
 using SalesTrack.Contracts.Dto;
 
 namespace SalesTrack.Api.Controllers.V1;
@@ -39,5 +41,20 @@ public class ProductController(
         await mediator.Send(new UpdateProductCommand { Id = id, Price = updateProductDto.Price }, cancellationToken);
 
         return new ApiResponseV1();
+    }
+
+    [Authorize]
+    [HttpGet]
+    [HttpGet]
+    public async Task<ApiResponseV1<GetProductsResponseDto>> GetProductsAsync(
+        [FromQuery] GetProductsDto getProductsDto,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(mapper.Map<GetProductsQuery>(getProductsDto));
+
+        return new ApiResponseV1<GetProductsResponseDto>
+        {
+            Data = mapper.Map<GetProductsResponseDto>(result)
+        };
     }
 }
