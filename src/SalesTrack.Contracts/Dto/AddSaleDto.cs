@@ -2,7 +2,7 @@
 
 public class AddSaleDto
 {
-    public List<SaleProductInfoModel> SaledProducts { get; set; }
+    public List<SaleProductInfoModel> SaledProducts { get; set; } = [];
 
     public class SaleProductInfoModel
     {

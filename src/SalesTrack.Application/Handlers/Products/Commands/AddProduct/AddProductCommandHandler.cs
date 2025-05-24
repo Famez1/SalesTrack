@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using SalesTrack.Common.Exceptions;
 using SalesTrack.Domain.Entities;
 using SalesTrack.Persistence;
 
@@ -15,7 +14,6 @@ public class AddProductCommandHandler(
         CancellationToken cancellationToken)
     {
         var newProduct = mapper.Map<Product>(command);
-        newProduct.Id = Guid.NewGuid();
 
         salesTrackDbContext.Products.Add(newProduct);
 

@@ -4,7 +4,7 @@ namespace SalesTrack.Application.Handlers.Sales.Commands.AddSale;
 
 public class AddSaleCommand : IRequest
 {
-    public List<SaleProductInfoModel> SaledProducts { get; set; }
+    public List<SaleProductInfoModel> SaledProducts { get; set; } = [];
 
     public class SaleProductInfoModel
     {

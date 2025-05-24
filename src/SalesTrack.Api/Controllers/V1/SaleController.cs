@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SalesTrack.Api.Contracts;
 using SalesTrack.Application.Handlers.Sales.Commands.AddSale;
+using SalesTrack.Application.Handlers.Sales.Queries.GetSales;
 using SalesTrack.Contracts.Dto;
 
 namespace SalesTrack.Api.Controllers.V1;
@@ -19,5 +20,16 @@ public class SaleController(
         await mediator.Send(mapper.Map<AddSaleCommand>(addSaleDto));
 
         return new ApiResponseV1();
+    }
+
+    [HttpGet]
+    public async Task<ApiResponseV1<List<GetSalesResponseDto>>> GetSalesAsync([FromQuery] GetSalesDto getSalesDto)
+    {
+        var result = await mediator.Send(mapper.Map<GetSalesQuery>(getSalesDto));
+
+        return new ApiResponseV1<List<GetSalesResponseDto>>
+        {
+            Data = mapper.Map<List<GetSalesResponseDto>>(result)
+        };
     }
 }
