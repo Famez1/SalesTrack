@@ -20,7 +20,9 @@ public class InventoryController(
     /// <param name="addInventoryDto"></param>
     /// <returns></returns>
     [HttpPut]
-    public async Task<ApiResponseV1> AddInventoryAsync([FromBody] AddInventoryDto addInventoryDto)
+    public async Task<ApiResponseV1> AddInventoryAsync(
+        [FromBody] AddInventoryDto addInventoryDto,
+        CancellationToken cancellationToken)
     {
         var command = new AddInventoryCommand 
         { 
@@ -28,7 +30,7 @@ public class InventoryController(
             Quantity = addInventoryDto.Quantity 
         };
 
-        await mediator.Send(command);
+        await mediator.Send(command, cancellationToken);
 
         return new ApiResponseV1();
     }

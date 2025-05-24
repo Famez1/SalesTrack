@@ -16,7 +16,7 @@ public class GetInventoriesQueryHandler(
         query.Offset ??= 0;
         query.Limit ??= 20;
 
-        var inventories = salesTrackDbContext.Inventories
+        var inventories = await salesTrackDbContext.Inventories
             .Include(x => x.Product)
             .Skip(query.Offset.Value)
             .Take(query.Limit.Value)
@@ -29,7 +29,8 @@ public class GetInventoriesQueryHandler(
                     Id = x.ProductId,
                     Name = x.Product.Name,
                 }
-            });
+            })
+            .ToListAsync(cancellationToken);
 
         var result = mapper.Map<List<GetInventoriesQueryResult.InventoriesInfoModel>>(inventories);
 
