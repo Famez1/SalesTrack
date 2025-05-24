@@ -2,6 +2,6 @@
 
 namespace SalesTrack.Contracts.Dto;
 
-public class GetInventoriesDto : BasePaginationModel
+public class GetInventoriesDto : BaseDtoModel
 {
 }

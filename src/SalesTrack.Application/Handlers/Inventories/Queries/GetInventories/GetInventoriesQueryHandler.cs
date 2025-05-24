@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SalesTrack.Common.Models;
+using SalesTrack.Domain.Entities;
 using SalesTrack.Persistence;
 
 namespace SalesTrack.Application.Handlers.Inventories.Queries.GetInventories;
@@ -16,15 +18,20 @@ public class GetInventoriesQueryHandler(
         query.Offset ??= 0;
         query.Limit ??= 20;
 
-        var inventories = await salesTrackDbContext.Inventories
+        var inventoriesQuery = salesTrackDbContext.Inventories
             .Include(x => x.Product)
+            .AsQueryable();
+            
+        inventoriesQuery = OrderByDirection(inventoriesQuery, query.Direction);
+
+        var inventories = await inventoriesQuery
             .Skip(query.Offset.Value)
             .Take(query.Limit.Value)
-            .Select(x => new Domain.Entities.Inventory
+            .Select(x => new Inventory
             {
                 Id = x.Id,
                 Quantity = x.Quantity,
-                Product = new Domain.Entities.Product
+                Product = new Product
                 {
                     Id = x.ProductId,
                     Name = x.Product.Name,
@@ -35,5 +42,16 @@ public class GetInventoriesQueryHandler(
         var result = mapper.Map<List<GetInventoriesQueryResult.InventoriesInfoModel>>(inventories);
 
         return new GetInventoriesQueryResult { Inventories = result };
+    }
+
+    private IQueryable<Inventory> OrderByDirection(
+        IQueryable<Inventory> inventoryQuery,
+        OrderDirectionEnum? direction)
+    {
+        return direction switch
+        {
+            OrderDirectionEnum.DESC => inventoryQuery.OrderByDescending(c => c.Product.Name),
+            _ => inventoryQuery.OrderBy(c => c.Product.Name)
+        };
     }
 }
