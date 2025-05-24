@@ -3,12 +3,8 @@ using SalesTrack.Common.Models;
 
 namespace SalesTrack.Application.Handlers.Sales.Queries.GetSales;
 
-public class GetSalesQuery : IRequest<List<GetSalesQueryResult>>
+public class GetSalesQuery : BasePaginationModel, IRequest<List<GetSalesQueryResult>>
 {
-    public int? Limit { get; set; }
-
-    public int? Offset { get; set; }
-
     public OrderDirectionEnum? Direction { get; set; }
 
     public Filter? QueryFilter { get; set; }
