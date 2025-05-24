@@ -21,7 +21,13 @@ public class GetInventoriesQueryHandler(
         var inventoriesQuery = salesTrackDbContext.Inventories
             .Include(x => x.Product)
             .AsQueryable();
-            
+
+        if (query.Search is not null)
+        {
+            inventoriesQuery = inventoriesQuery
+                .Where(x => EF.Functions.ILike(x.Product.Name, $"%{query.Search}%"));
+        }
+
         inventoriesQuery = OrderByDirection(inventoriesQuery, query.Direction);
 
         var inventories = await inventoriesQuery
