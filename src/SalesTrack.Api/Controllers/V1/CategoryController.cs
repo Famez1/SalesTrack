@@ -20,7 +20,7 @@ public class CategoryController(
     /// </summary>
     /// <param name="addCategoryDto"></param>
     /// <returns></returns>
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ApiResponseV1> AddCategoryAsync(
         [FromBody] AddCategoryDto addCategoryDto, 
@@ -37,7 +37,7 @@ public class CategoryController(
     /// <param name="getCategoriesDto"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [Authorize]
+    //[Authorize]
     [HttpGet]
     public async Task<ApiResponseV1<GetCategoriesResponseDto>> GetCategoriesAsync(
         [FromQuery] GetCategoriesDto getCategoriesDto, 

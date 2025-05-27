@@ -1,0 +1,81 @@
+@page
+@model SalesTrack.Api.Pages.IndexModel
+
+@section HeadContent {
+    <meta charset="utf-8" />
+}
+
+<div style="
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 15vh;
+    background-image: url('/images/background.jpg');
+    background-size: 50% auto;
+    background-position: center;
+    background-repeat: no-repeat;
+">
+
+    <div class="container" style="max-width: 700px;">
+        <div class="row g-4">
+
+            <div class="col-6 d-flex">
+                <form method="get" action="/Categories/Index" class="w-100">
+                    <input type="hidden" name="limit" value="10" />
+                    <input type="hidden" name="offset" value="0" />
+                    <input type="hidden" name="direction" value="Asc" />
+                    <button type="submit" class="btn w-100 py-5" style="
+                        font-size: 2rem;
+                        background-color: rgba(0, 123, 255, 0.8);
+                        color: white;
+                        border: none;
+                    ">
+                        Категории
+                    </button>
+                </form>
+            </div>
+
+            <div class="col-6 d-flex">
+                <form method="get" action="/Products/Index" class="w-100">
+                    <button type="submit" class="btn w-100 py-5" style="
+                        font-size: 2rem;
+                        background-color: rgba(23, 162, 184, 0.8);
+                        color: white;
+                        border: none;
+                    ">
+                        Продукты
+                    </button>
+                </form>
+            </div>
+
+            <div class="col-6 d-flex">
+                <form method="get" action="/Sales/Index" class="w-100">
+                    <button type="submit" class="btn w-100 py-5" style="
+                        font-size: 2rem;
+                        background-color: rgba(40, 167, 69, 0.8);
+                        color: white;
+                        border: none;
+                    ">
+                        Продажи
+                    </button>
+                </form>
+            </div>
+
+            <div class="col-6 d-flex">
+                <form method="get" action="/Inventory/Index" class="w-100">
+                    <button type="submit" class="btn w-100 py-5" style="
+                        font-size: 2rem;
+                        background-color: rgba(108, 117, 125, 0.8);
+                        color: white;
+                        border: none;
+                    ">
+                        Склад
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>

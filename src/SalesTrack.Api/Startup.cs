@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.OData;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using SalesTrack.Api.Behaviors;
@@ -30,6 +31,7 @@ public class Startup
         services.AddHttpContextAccessor();
         services.AddSwaggerDocs(Configuration);
 
+        services.AddRazorPages();
         services.AddSignalR();
         services.AddControllers();
 
@@ -53,6 +55,11 @@ public class Startup
 
         services.AddQuartz(Configuration);
 
+        services.AddHttpClient("SalesTrackApi", client =>
+        {
+            client.BaseAddress = new Uri("https://localhost:7197/"); 
+        });
+
         services.ConfigureAutoMapper(Configuration);
 
         services.AddCors();
@@ -60,6 +67,9 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        env.WebRootPath = Path.Combine(env.ContentRootPath, "wwwroot");
+        env.WebRootFileProvider = new PhysicalFileProvider(env.WebRootPath);
+
         app.UseMiddleware<ExceptionHandlingMiddleware>();
 
         app.UseSwaggerDocumentation();
@@ -67,6 +77,13 @@ public class Startup
         app.UseSerilogRequestLogging();
 
         app.UseODataBatching();
+
+        app.UseDefaultFiles(new DefaultFilesOptions
+        {
+            DefaultFileNames = new List<string> { "index.html" }
+        });
+        app.UseStaticFiles();
+
         app.UseRouting();
 
         app.UseAuthentication();
@@ -75,6 +92,7 @@ public class Startup
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapRazorPages();
             endpoints.MapControllers();
             endpoints.MapHub<TestHub>("/api/signalr");
         });

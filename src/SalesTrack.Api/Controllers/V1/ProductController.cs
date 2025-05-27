@@ -45,7 +45,6 @@ public class ProductController(
 
     [Authorize]
     [HttpGet]
-    [HttpGet]
     public async Task<ApiResponseV1<GetProductsResponseDto>> GetProductsAsync(
         [FromQuery] GetProductsDto getProductsDto,
         CancellationToken cancellationToken)

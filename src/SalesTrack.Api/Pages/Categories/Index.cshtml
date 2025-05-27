@@ -1,0 +1,53 @@
+﻿@page
+@model SalesTrack.Api.Pages.Categories.IndexModel
+@{
+    ViewData["Title"] = "Категории";
+}
+
+<h1>Категории</h1>
+
+<form method="post" class="mb-4">
+    @Html.AntiForgeryToken()
+    <div class="input-group">
+        <input name="NewCategoryName" class="form-control" placeholder="Название новой категории" value="@Model.NewCategoryName" />
+        <button type="submit" class="btn btn-success">Добавить категорию</button>
+    </div>
+    <span asp-validation-for="NewCategoryName" class="text-danger"></span>
+</form>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Название категории</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model.Categories)
+        {
+            <tr>
+                <td>@category.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-between mt-3">
+    <form method="get">
+        <input type="hidden" name="limit" value="@Model.Limit" />
+        <input type="hidden" name="offset" value="@(Math.Max((Model.Offset ?? 0) - (Model.Limit ?? 10), 0))" />
+        <input type="hidden" name="direction" value="@Model.Direction" />
+        <button type="submit" class="btn btn-primary" @(Model.Offset == 0 ? "disabled" : "")>Назад</button>
+    </form>
+
+    <form method="get">
+        <input type="hidden" name="limit" value="@Model.Limit" />
+        <input type="hidden" name="offset" value="@( (Model.Offset ?? 0) + (Model.Limit ?? 10) )" />
+        <input type="hidden" name="direction" value="@Model.Direction" />
+        <button type="submit" class="btn btn-primary" @(Model.Categories.Count < (Model.Limit ?? 10) ? "disabled" : "")>Вперед</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
