@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SalesTrack.Api.Contracts;
 using SalesTrack.Common.Models;
-using SalesTrack.Contracts.Dto;
+using System.Net.Http.Json;
 
 namespace SalesTrack.Api.Pages.Categories;
 
@@ -10,7 +10,15 @@ public class IndexModel : PageModel
 {
     private readonly HttpClient _httpClient;
 
-    public List<GetCategoriesResponseDto.CategoryInfoModel> Categories { get; set; } = new();
+    public IndexModel(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
+
+    public List<CategoryDto> Categories { get; set; } = new();
+
+    [BindProperty(SupportsGet = true)]
+    public string Search { get; set; } = "";
 
     [BindProperty(SupportsGet = true)]
     public int? Limit { get; set; } = 10;
@@ -18,69 +26,73 @@ public class IndexModel : PageModel
     [BindProperty(SupportsGet = true)]
     public int? Offset { get; set; } = 0;
 
-    [BindProperty(SupportsGet = true)]
-    public OrderDirectionEnum? Direction { get; set; } = OrderDirectionEnum.ASC;
-
-    [BindProperty(Name = "NewCategoryName")]
-    public string? NewCategoryName { get; set; }
-
-    public IndexModel(HttpClient httpClient)
-    {
-        _httpClient = httpClient;
-    }
+    [BindProperty]
+    public AddCategoryDto NewCategory { get; set; } = new();
 
     public async Task OnGetAsync()
     {
-        // Собираем query-параметры
         var queryParams = new Dictionary<string, string?>()
         {
             ["limit"] = Limit?.ToString(),
-            ["direction"] = 1.ToString(),
             ["offset"] = Offset?.ToString(),
+            ["direction"] = "1",
+            ["search"] = string.IsNullOrWhiteSpace(Search) ? null : Search
         };
 
-        // Формируем строку запроса
         var queryString = string.Join("&", queryParams
-            .Where(kv => kv.Value != null)
-            .Select(kv => $"{kv.Key}={kv.Value}"));
+            .Where(kv => !string.IsNullOrEmpty(kv.Value))
+            .Select(kv => $"{kv.Key}={System.Net.WebUtility.UrlEncode(kv.Value)}"));
 
         var url = $"https://localhost:7197/api/v1/Category?{queryString}";
 
-        // Выполняем GET запрос и десериализуем ответ
         var response = await _httpClient.GetFromJsonAsync<ApiResponseV1<GetCategoriesResponseDto>>(url);
 
-        Categories = response?.Data?.Categories ?? new List<GetCategoriesResponseDto.CategoryInfoModel>();
+        Categories = response?.Data?.Categories ?? new List<CategoryDto>();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAddCategoryAsync()
     {
-        if (string.IsNullOrWhiteSpace(NewCategoryName))
+        if (!ModelState.IsValid)
         {
-            ModelState.AddModelError(nameof(NewCategoryName), "Название категории не может быть пустым");
             await OnGetAsync();
             return Page();
         }
 
-        var dto = new AddCategoryDto { Name = NewCategoryName };
+        var url = "https://localhost:7197/api/v1/Category";
 
-        var response = await _httpClient.PostAsJsonAsync("https://localhost:7197/api/v1/Category", dto);
+        var response = await _httpClient.PostAsJsonAsync(url, NewCategory);
 
-        if (!response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode)
+        {
+            return RedirectToPage(new
+            {
+                Search = this.Search,
+                Limit = this.Limit,
+                Offset = this.Offset
+            });
+        }
+        else
         {
             ModelState.AddModelError(string.Empty, "Ошибка при добавлении категории");
             await OnGetAsync();
             return Page();
         }
-
-        await OnGetAsync();
-
-        NewCategoryName = null;
-
-        return Page();
     }
 }
 
-public class ApiResponseV1<T>
+public class AddCategoryDto
 {
-    public T Data { get; set; } = default!;
+    public string Name { get; set; } = "";
+}
+
+public class GetCategoriesResponseDto
+{
+    public List<CategoryDto> Categories { get; set; } = new();
+}
+
+public class CategoryDto
+{
+    public Guid Id { get; set; }
+
+    public string Name { get; set; } = "";
 }

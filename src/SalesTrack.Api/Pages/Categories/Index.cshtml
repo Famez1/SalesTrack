@@ -4,50 +4,141 @@
     ViewData["Title"] = "Категории";
 }
 
-<h1>Категории</h1>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - SalesTrack</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Категории</h1>
 
-<form method="post" class="mb-4">
-    @Html.AntiForgeryToken()
-    <div class="input-group">
-        <input name="NewCategoryName" class="form-control" placeholder="Название новой категории" value="@Model.NewCategoryName" />
-        <button type="submit" class="btn btn-success">Добавить категорию</button>
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+            <form method="get" class="d-flex align-items-center gap-2">
+                <input type="text" name="Search" value="@Model.Search" placeholder="Поиск по названию категории" class="form-control" />
+                <input type="hidden" name="Limit" value="@Model.Limit" />
+                <input type="hidden" name="Offset" value="0" />
+                <button type="submit" class="btn btn-primary">Поиск</button>
+            </form>
+
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Добавить категорию</button>
+        </div>
+
+        <table class="table table-bordered table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>Название категории</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Categories.Any())
+                {
+                    <tr>
+                        <td class="text-center">Категории не найдены</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var category in Model.Categories)
+                    {
+                        <tr>
+                            <td>@category.Name</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between mt-3">
+            <form method="get">
+                <input type="hidden" name="Search" value="@Model.Search" />
+                <input type="hidden" name="Limit" value="@Model.Limit" />
+                <input type="hidden" name="Offset" value="@(Math.Max((Model.Offset ?? 0) - (Model.Limit ?? 10), 0))" />
+                <button type="submit" class="btn btn-outline-primary" @(Model.Offset == 0 ? "disabled" : "")>Назад</button>
+            </form>
+
+            <form method="get">
+                <input type="hidden" name="Search" value="@Model.Search" />
+                <input type="hidden" name="Limit" value="@Model.Limit" />
+                <input type="hidden" name="Offset" value="@( (Model.Offset ?? 0) + (Model.Limit ?? 10) )" />
+                <button type="submit" class="btn btn-outline-primary" @(Model.Categories.Count < (Model.Limit ?? 10) ? "disabled" : "")>Вперед</button>
+            </form>
+        </div>
     </div>
-    <span asp-validation-for="NewCategoryName" class="text-danger"></span>
-</form>
 
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="addCategoryForm" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryModalLabel">Добавить категорию</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="categoryNameInput" class="form-label">Название категории</label>
+                        <input type="text" id="categoryNameInput" name="Name" class="form-control" placeholder="Введите название категории" required />
+                    </div>
+                    <div id="addCategoryError" class="text-danger d-none"></div>
+                    <div id="addCategorySuccess" class="text-success d-none">Категория успешно добавлена!</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-success">Добавить</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Название категории</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var category in Model.Categories)
-        {
-            <tr>
-                <td>@category.Name</td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const addCategoryForm = document.getElementById('addCategoryForm');
+        const errorDiv = document.getElementById('addCategoryError');
+        const successDiv = document.getElementById('addCategorySuccess');
 
-<div class="d-flex justify-content-between mt-3">
-    <form method="get">
-        <input type="hidden" name="limit" value="@Model.Limit" />
-        <input type="hidden" name="offset" value="@(Math.Max((Model.Offset ?? 0) - (Model.Limit ?? 10), 0))" />
-        <input type="hidden" name="direction" value="@Model.Direction" />
-        <button type="submit" class="btn btn-primary" @(Model.Offset == 0 ? "disabled" : "")>Назад</button>
-    </form>
+        addCategoryForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
 
-    <form method="get">
-        <input type="hidden" name="limit" value="@Model.Limit" />
-        <input type="hidden" name="offset" value="@( (Model.Offset ?? 0) + (Model.Limit ?? 10) )" />
-        <input type="hidden" name="direction" value="@Model.Direction" />
-        <button type="submit" class="btn btn-primary" @(Model.Categories.Count < (Model.Limit ?? 10) ? "disabled" : "")>Вперед</button>
-    </form>
-</div>
+            errorDiv.classList.add('d-none');
+            successDiv.classList.add('d-none');
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+            const formData = new FormData(addCategoryForm);
+            const name = formData.get('Name');
+
+            if (!name || !name.trim()) {
+                errorDiv.textContent = 'Пожалуйста, введите название категории.';
+                errorDiv.classList.remove('d-none');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/v1/Category', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name.trim() })
+                });
+
+                if (response.ok) {
+                    successDiv.classList.remove('d-none');
+                    addCategoryForm.reset();
+
+                    setTimeout(() => {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('addCategoryModal'));
+                        modal.hide();
+
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    const errorData = await response.json();
+                    errorDiv.textContent = errorData?.message || 'Ошибка при добавлении категории';
+                    errorDiv.classList.remove('d-none');
+                }
+            } catch (ex) {
+                errorDiv.textContent = 'Ошибка при отправке запроса: ' + ex.message;
+                errorDiv.classList.remove('d-none');
+            }
+        });
+    </script>
+</body>
+</html>
