@@ -51,6 +51,9 @@
 
             <div class="col-6 d-flex">
                 <form method="get" action="/Sales/Index" class="w-100">
+                    <input type="hidden" name="limit" value="10" />
+                    <input type="hidden" name="offset" value="0" />
+                    <input type="hidden" name="direction" value="Asc" />
                     <button type="submit" class="btn w-100 py-5" style="
                         font-size: 2rem;
                         background-color: rgba(40, 167, 69, 0.8);
@@ -77,5 +80,4 @@
 
         </div>
     </div>
-
 </div>

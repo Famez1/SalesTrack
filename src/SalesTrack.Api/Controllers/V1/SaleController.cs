@@ -20,7 +20,7 @@ public class SaleController(
     /// <param name="addSaleDto"></param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<ApiResponseV1> AddSaleAsync(AddSaleDto addSaleDto)
+    public async Task<ApiResponseV1> AddSaleAsync([FromBody] AddSaleDto addSaleDto)
     {
         await mediator.Send(mapper.Map<AddSaleCommand>(addSaleDto));
 
