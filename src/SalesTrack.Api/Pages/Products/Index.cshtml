@@ -1,0 +1,204 @@
+﻿@page
+@model SalesTrack.Api.Pages.Products.IndexModel
+@{
+    ViewData["Title"] = "Товары";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - SalesTrack</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Товары</h1>
+
+        <form method="get" class="mb-3 d-flex align-items-center gap-2">
+            <label for="categoryId" class="form-label mb-0 me-2">Категория:</label>
+            <input type="text" name="CategoryId" id="categoryId" value="@(Model.CategoryId?.ToString() ?? "")" placeholder="Введите GUID категории" class="form-control" />
+            <button type="submit" class="btn btn-primary">Фильтровать</button>
+        </form>
+
+        <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addProductModal">Добавить товар</button>
+
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Цена</th>
+                    <th>Ед. измерения</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Products.Count == 0)
+                {
+                    <tr>
+                        <td colspan="3" class="text-center">Товары не найдены</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model.Products)
+                    {
+                        <tr class="product-row"
+                            data-id="@item.Id"
+                            data-name="@item.Name"
+                            data-price="@item.Price"
+                            data-unit="@item.Unit"
+                            style="cursor:pointer;">
+                            <td>@item.Name</td>
+                            <td>@item.Price.ToString("F2")</td>
+                            <td>@item.Unit</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="addProductForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addProductModalLabel">Добавить товар</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Название</label>
+                            <input type="text" class="form-control" id="productName" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="productPrice" class="form-label">Цена</label>
+                            <input type="number" step="0.01" class="form-control" id="productPrice" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="productUnit" class="form-label">Ед. измерения</label>
+                            <input type="text" class="form-control" id="productUnit" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="productCategoryId" class="form-label">ID категории</label>
+                            <input type="text" class="form-control" id="productCategoryId" required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="editProductForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editProductModalLabel">Редактировать товар</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="editProductId" />
+                        <div class="mb-3">
+                            <label for="editProductName" class="form-label">Название</label>
+                            <input type="text" class="form-control" id="editProductName" disabled />
+                        </div>
+                        <div class="mb-3">
+                            <label for="editProductPrice" class="form-label">Цена</label>
+                            <input type="number" class="form-control" id="editProductPrice" step="0.01" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="editProductUnit" class="form-label">Ед. измерения</label>
+                            <input type="text" class="form-control" id="editProductUnit" required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("addProductForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const data = {
+                name: document.getElementById("productName").value,
+                price: parseFloat(document.getElementById("productPrice").value),
+                unit: document.getElementById("productUnit").value,
+                categoryId: document.getElementById("productCategoryId").value
+            };
+
+            const response = await fetch("/api/v1/Product", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                alert("Товар успешно добавлен!");
+                location.reload();
+            } else {
+                const errorText = await response.text();
+                alert("Ошибка при добавлении товара: " + errorText);
+            }
+        });
+    </script>
+
+    <script>
+        const productModal = new bootstrap.Modal(document.getElementById('editProductModal'));
+        const editForm = document.getElementById('editProductForm');
+
+        document.querySelectorAll('.product-row').forEach(row => {
+            row.addEventListener('click', () => {
+                const id = row.dataset.id;
+                const name = row.dataset.name;
+                const price = row.dataset.price;
+                const unit = row.dataset.unit;
+
+                document.getElementById('editProductId').value = id;
+                document.getElementById('editProductName').value = name;
+                document.getElementById('editProductPrice').value = price;
+                document.getElementById('editProductUnit').value = unit;
+
+                productModal.show();
+            });
+        });
+
+        editForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id = document.getElementById('editProductId').value;
+            const price = parseFloat(document.getElementById('editProductPrice').value);
+            const unit = document.getElementById('editProductUnit').value;
+
+            const response = await fetch(`/api/v1/Product/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ price, unit })
+            });
+
+            if (response.ok) {
+                productModal.hide();
+                location.reload();
+            } else {
+                alert("Ошибка при обновлении товара");
+            }
+        });
+    </script>
+
+</body>
+</html>

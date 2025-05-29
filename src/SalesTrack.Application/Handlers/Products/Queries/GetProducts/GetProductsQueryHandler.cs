@@ -18,11 +18,13 @@ public class GetProductsQueryHandler(
         query.Offset ??= 0;
         query.Limit ??= 20;
 
-        var productQuery = salesTrackDbContext.Products.AsQueryable();
+        var productQuery = salesTrackDbContext.Products
+            .Include(x => x.Category)
+            .AsQueryable();
 
         if (query.CategoryId.HasValue)
         {
-            productQuery = productQuery.Where(x => x.Id == query.CategoryId);
+            productQuery = productQuery.Where(x => x.CategoryId == query.CategoryId.Value);
         }
 
         productQuery = OrderByDirection(productQuery, query.Direction);
