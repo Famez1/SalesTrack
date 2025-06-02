@@ -1,83 +1,68 @@
 @page
 @model SalesTrack.Api.Pages.IndexModel
-
-@section HeadContent {
-    <meta charset="utf-8" />
+@{
+    ViewData["Title"] = "Главная";
 }
 
-<div style="
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 15vh;
-    background-image: url('/images/background.jpg');
-    background-size: 50% auto;
-    background-position: center;
-    background-repeat: no-repeat;
-">
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - SalesTrack</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #e8f0fe; /* нежно-голубой фон */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Главная</h1>
+        </div>
 
-    <div class="container" style="max-width: 700px;">
         <div class="row g-4">
-
-            <div class="col-6 d-flex">
-                <form method="get" action="/Categories/Index" class="w-100">
+            <div class="col-md-6">
+                <form method="get" action="/Categories/Index">
                     <input type="hidden" name="limit" value="10" />
                     <input type="hidden" name="offset" value="0" />
                     <input type="hidden" name="direction" value="Asc" />
-                    <button type="submit" class="btn w-100 py-5" style="
-                        font-size: 2rem;
-                        background-color: rgba(0, 123, 255, 0.8);
-                        color: white;
-                        border: none;
-                    ">
+                    <button type="submit" class="btn btn-primary w-100 py-4 fs-3">
                         Категории
                     </button>
                 </form>
             </div>
 
-            <div class="col-6 d-flex">
-                <form method="get" action="/Products/Index" class="w-100">
-                    <button type="submit" class="btn w-100 py-5" style="
-                        font-size: 2rem;
-                        background-color: rgba(23, 162, 184, 0.8);
-                        color: white;
-                        border: none;
-                    ">
+            <div class="col-md-6">
+                <form method="get" action="/Products/Index">
+                    <button type="submit" class="btn btn-info w-100 py-4 fs-3 text-white">
                         Продукты
                     </button>
                 </form>
             </div>
 
-            <div class="col-6 d-flex">
-                <form method="get" action="/Sales/Index" class="w-100">
+            <div class="col-md-6">
+                <form method="get" action="/Sales/Index">
                     <input type="hidden" name="limit" value="10" />
                     <input type="hidden" name="offset" value="0" />
                     <input type="hidden" name="direction" value="Asc" />
-                    <button type="submit" class="btn w-100 py-5" style="
-                        font-size: 2rem;
-                        background-color: rgba(40, 167, 69, 0.8);
-                        color: white;
-                        border: none;
-                    ">
+                    <button type="submit" class="btn btn-success w-100 py-4 fs-3">
                         Продажи
                     </button>
                 </form>
             </div>
 
-            <div class="col-6 d-flex">
-                <form method="get" action="/Inventory/Index" class="w-100">
-                    <button type="submit" class="btn w-100 py-5" style="
-                        font-size: 2rem;
-                        background-color: rgba(108, 117, 125, 0.8);
-                        color: white;
-                        border: none;
-                    ">
+            <div class="col-md-6">
+                <form method="get" action="/Inventory/Index">
+                    <button type="submit" class="btn btn-secondary w-100 py-4 fs-3">
                         Склад
                     </button>
                 </form>
             </div>
-
         </div>
     </div>
-</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
