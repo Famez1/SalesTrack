@@ -27,7 +27,7 @@ public static class ServiceCollectionExtensions
 
     public static void ConfigureAutoMapper(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAutoMapper(typeof(Api.Mappings.AuthenticationMappingProfile).Assembly);
+        services.AddAutoMapper(typeof(Api.Mappings.ProductMappingProfile).Assembly);
         services.AddAutoMapper(typeof(Application.Mappings.ProductMappingProfile).Assembly);
     }
 

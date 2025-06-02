@@ -14,11 +14,12 @@ public class AddInventoryCommandHandler(
         CancellationToken cancellationToken)
     {
         var inventory = await salesTrackDbContext.Inventories
-            .FirstOrDefaultAsync(x => x.ProductId == command.ProductId, cancellationToken);
+            .Include(x => x.Product)
+            .FirstOrDefaultAsync(x => x.Product.Name == command.ProductName, cancellationToken);
 
         if (inventory is null)
         {
-            CreateInventory(command);
+            await CreateInventory(command);
         }
         else
         {
@@ -35,12 +36,20 @@ public class AddInventoryCommandHandler(
         inventory.Quantity = inventory.Quantity + addInventoryCommand.Quantity;
     }
 
-    private void CreateInventory(AddInventoryCommand addInventoryCommand)
+    private async Task CreateInventory(AddInventoryCommand addInventoryCommand)
     {
+        var product = await salesTrackDbContext.Products
+            .Select(x => new Product
+            {
+                Id = x.Id,
+                Name = x.Name,
+            })
+            .FirstOrDefaultAsync(x => x.Name == addInventoryCommand.ProductName);
+
         var inventory = new Inventory
         {
             Quantity = addInventoryCommand.Quantity,
-            ProductId = addInventoryCommand.ProductId,
+            ProductId = product.Id,
         };
 
         salesTrackDbContext.Inventories.Add(inventory);

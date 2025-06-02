@@ -79,9 +79,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="productIdInput" class="form-label">ID товара (ProductId)</label>
-                        <input type="text" id="productIdInput" name="ProductId" class="form-control" placeholder="Введите GUID товара" required />
-                        <div class="form-text">Введите уникальный идентификатор товара (GUID)</div>
+                        <label for="productIdInput" class="form-label">Название Товара</label>
+                        <input type="text" id="productIdInput" name="ProductName" class="form-control" placeholder="Введите Название" required />
+                        <div class="form-text">Введите название товара</div>
                     </div>
                     <div class="mb-3">
                         <label for="quantityInput" class="form-label">Количество</label>
@@ -111,10 +111,10 @@
             successDiv.classList.add('d-none');
 
             const formData = new FormData(addInventoryForm);
-            const productId = formData.get('ProductId');
+            const productName = formData.get('ProductName');
             const quantity = formData.get('Quantity');
 
-            if (!productId || !quantity) {
+            if (!productName || !quantity) {
                 errorDiv.textContent = 'Пожалуйста, заполните все поля.';
                 errorDiv.classList.remove('d-none');
                 return;
@@ -125,7 +125,7 @@
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        productId: productId,
+                        productName: productName,
                         quantity: parseInt(quantity)
                     })
                 });

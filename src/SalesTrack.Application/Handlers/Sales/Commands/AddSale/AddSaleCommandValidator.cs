@@ -14,9 +14,9 @@ public class AddSaleCommandValidator : AbstractValidator<AddSaleCommand>
 
         RuleForEach(x => x.SaledProducts).ChildRules(product =>
         {
-            product.RuleFor(x => x.ProductId)
+            product.RuleFor(x => x.ProductName)
                 .NotEmpty().WithMessage("ProductId обязателен.")
-                .MustAsync(ProductExists).WithMessage("Товар с таким ProductId не существует.");
+                .MustAsync(ProductExists).WithMessage("Товар не существует.");
 
             product.RuleFor(x => x.Quantity)
                 .GreaterThan(0).WithMessage("Количество должно быть больше нуля.");
@@ -27,16 +27,17 @@ public class AddSaleCommandValidator : AbstractValidator<AddSaleCommand>
         });
     }
 
-    private async Task<bool> ProductExists(Guid productId, CancellationToken cancellationToken)
+    private async Task<bool> ProductExists(string productName, CancellationToken cancellationToken)
     {
         return await _salesTrackDbContext.Products
-            .AnyAsync(p => p.Id == productId, cancellationToken);
+            .AnyAsync(p => p.Name == productName, cancellationToken);
     }
 
     private async Task<bool> EnoughInInventory(AddSaleCommand.SaleProductInfoModel product, CancellationToken cancellationToken)
     {
         var inventory = await _salesTrackDbContext.Inventories
-            .FirstOrDefaultAsync(i => i.ProductId == product.ProductId, cancellationToken);
+            .Include(x => x.Product)
+            .FirstOrDefaultAsync(i => i.Product.Name == product.ProductName, cancellationToken);
 
         if (inventory == null)
             return false; 

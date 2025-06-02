@@ -11,7 +11,7 @@ public class AddInventoryCommandValidator : AbstractValidator<AddInventoryComman
     {
         _salesTrackDbContext = salesTrackDbContext;
 
-        RuleFor(x => x.ProductId)
+        RuleFor(x => x.ProductName)
             .Must(IsPruductExists)
             .WithMessage("Такого товара не существует");
 
@@ -20,8 +20,8 @@ public class AddInventoryCommandValidator : AbstractValidator<AddInventoryComman
             .WithMessage("Кол-во единиц товара должно быть больше 0");
     }
 
-    private bool IsPruductExists(Guid productId)
+    private bool IsPruductExists(string productName)
     {
-        return _salesTrackDbContext.Products.Any(x => x.Id == productId);
+        return _salesTrackDbContext.Products.Any(x => x.Name == productName);
     }
 }

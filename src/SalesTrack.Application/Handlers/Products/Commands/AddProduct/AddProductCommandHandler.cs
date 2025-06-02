@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SalesTrack.Domain.Entities;
 using SalesTrack.Persistence;
 
@@ -14,6 +15,11 @@ public class AddProductCommandHandler(
         CancellationToken cancellationToken)
     {
         var newProduct = mapper.Map<Product>(command);
+
+        newProduct.CategoryId = await salesTrackDbContext.Categories
+            .Where(x => x.Name == command.CategoryName)
+            .Select(x => x.Id)
+            .FirstOrDefaultAsync();
 
         salesTrackDbContext.Products.Add(newProduct);
 

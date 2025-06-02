@@ -20,7 +20,6 @@ public class CategoryController(
     /// </summary>
     /// <param name="addCategoryDto"></param>
     /// <returns></returns>
-    //[Authorize]
     [HttpPost]
     public async Task<ApiResponseV1> AddCategoryAsync(
         [FromBody] AddCategoryDto addCategoryDto, 
@@ -37,11 +36,9 @@ public class CategoryController(
     /// <param name="getCategoriesDto"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    //[Authorize]
     [HttpGet]
     public async Task<ApiResponseV1<GetCategoriesResponseDto>> GetCategoriesAsync(
-        [FromQuery] GetCategoriesDto getCategoriesDto, 
-        CancellationToken cancellationToken)
+        [FromQuery] GetCategoriesDto getCategoriesDto)
     {
         var result = await mediator.Send(mapper.Map<GetCategoryQuery>(getCategoriesDto));
 

@@ -16,8 +16,8 @@
         <h1>Товары</h1>
 
         <form method="get" class="mb-3 d-flex align-items-center gap-2">
-            <label for="categoryId" class="form-label mb-0 me-2">Категория:</label>
-            <input type="text" name="CategoryId" id="categoryId" value="@(Model.CategoryId?.ToString() ?? "")" placeholder="Введите GUID категории" class="form-control" />
+            <label for="categoryName" class="form-label mb-0 me-2">Категория:</label>
+            <input type="text" name="CategoryName" id="categoryName" value="@(Model.CategoryName ?? "")" placeholder="Название категории" class="form-control" />
             <button type="submit" class="btn btn-primary">Фильтровать</button>
         </form>
 
@@ -80,8 +80,8 @@
                             <input type="text" class="form-control" id="productUnit" required />
                         </div>
                         <div class="mb-3">
-                            <label for="productCategoryId" class="form-label">ID категории</label>
-                            <input type="text" class="form-control" id="productCategoryId" required />
+                            <label for="productCategoryName" class="form-label">Название категории</label>
+                            <input type="text" class="form-control" id="productCategoryName" required />
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -135,7 +135,7 @@
                 name: document.getElementById("productName").value,
                 price: parseFloat(document.getElementById("productPrice").value),
                 unit: document.getElementById("productUnit").value,
-                categoryId: document.getElementById("productCategoryId").value
+                categoryName: document.getElementById("productCategoryName").value
             };
 
             const response = await fetch("/api/v1/Product", {
@@ -163,6 +163,7 @@
         document.querySelectorAll('.product-row').forEach(row => {
             row.addEventListener('click', () => {
                 const id = row.dataset.id;
+                console.log("Clicked product id:", id);
                 const name = row.dataset.name;
                 const price = row.dataset.price;
                 const unit = row.dataset.unit;

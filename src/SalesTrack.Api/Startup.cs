@@ -6,7 +6,7 @@ using Microsoft.OData.ModelBuilder;
 using SalesTrack.Api.Behaviors;
 using SalesTrack.Api.Extensions;
 using SalesTrack.Api.Middleware;
-using SalesTrack.Application.Handlers.Authentication.Commands.SignUpUser;
+using SalesTrack.Application.Handlers.Products.Commands.AddProduct;
 using SalesTrack.Domain.Options;
 using SalesTrack.Infrastructure.Hubs;
 using Serilog;
@@ -47,11 +47,11 @@ public class Startup
         services.AddJwtTokenAuth(Configuration);
 
         services.AddMediatR(cfg => {
-            cfg.RegisterServicesFromAssembly(typeof(SingUpUserCommand).Assembly);
+            cfg.RegisterServicesFromAssembly(typeof(AddProductCommand).Assembly);
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
-        services.AddValidatorsFromAssembly(typeof(SingUpUserCommand).Assembly);
+        services.AddValidatorsFromAssembly(typeof(AddProductCommand).Assembly);
 
         services.AddQuartz(Configuration);
 

@@ -26,7 +26,7 @@ public class InventoryController(
     {
         var command = new AddInventoryCommand 
         { 
-            ProductId = addInventoryDto.ProductId, 
+            ProductName = addInventoryDto.ProductName, 
             Quantity = addInventoryDto.Quantity 
         };
 

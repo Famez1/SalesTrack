@@ -40,6 +40,8 @@ public class GetSalesQueryHandler(
         salesQuery = OrderByDirection(salesQuery, query.Direction);
 
         var sales = await salesQuery
+            .Include(x => x.SaleItems)
+                .ThenInclude(x => x.Product)
             .Skip(query.Offset.Value)
             .Take(query.Limit.Value)
             .ToListAsync(cancellationToken);
@@ -50,7 +52,7 @@ public class GetSalesQueryHandler(
             TotalAmount = sale.TotalAmount,
             SaleItems = sale.SaleItems.Select(item => new GetSalesQueryResult.SaleItemInfoModel
             {
-                ProductId = item.ProductId,
+                ProductName = item.Product.Name,
                 Quantity = item.Quantity,
                 UnitPrice = item.Price,
                 TotalePrice = item.Quantity * item.Price

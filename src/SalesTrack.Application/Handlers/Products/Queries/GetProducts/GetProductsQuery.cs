@@ -5,5 +5,5 @@ namespace SalesTrack.Application.Handlers.Products.Queries.GetProducts;
 
 public class GetProductsQuery : BaseDtoModel, IRequest<GetProductsQueryResult>
 {
-    public Guid? CategoryId { get; set; }
+    public string? CategoryName { get; set; }
 }

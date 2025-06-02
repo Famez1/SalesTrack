@@ -11,50 +11,57 @@ public class AddSaleCommandHandler(ISalesTrackDbContext salesTrackDbContext) : I
         AddSaleCommand command, 
         CancellationToken cancellationToken)
     {
-        var productIds = command.SaledProducts.Select(x => x.ProductId).ToList();
+        var productNames = command.SaledProducts.Select(x => x.ProductName).ToList();
 
         var allProducts = await salesTrackDbContext.Products
-            .Where(p => productIds.Contains(p.Id))
+            .Where(p => productNames.Contains(p.Name))
             .ToListAsync(cancellationToken);
 
         var productPriceInfo = command.SaledProducts
            .Join(allProducts,
-               cmdProduct => cmdProduct.ProductId,
-               dbProduct => dbProduct.Id,
+               cmdProduct => cmdProduct.ProductName,
+               dbProduct => dbProduct.Name,
                (cmdProduct, dbProduct) => new
                {
-                   ProductId = cmdProduct.ProductId,
+                   ProductId = cmdProduct.ProductName,
                    Quantity = cmdProduct.Quantity,
                    Price = dbProduct.Price
                })
            .ToDictionary(x => x.ProductId, x => (x.Quantity, x.Price));
 
         var inventories = salesTrackDbContext.Inventories
-            .Where(x => productIds.Contains(x.ProductId))
+            .Include(x => x.Product)
+            .Where(x => productNames.Contains(x.Product.Name))
             .ToList();
 
         decimal totalAmount = (productPriceInfo.Sum(p => p.Value.Quantity * p.Value.Price)); ;
 
         foreach (var inventory in inventories)
         {
-            if (productPriceInfo.TryGetValue(inventory.ProductId, out var saleInfo))
+            if (productPriceInfo.TryGetValue(inventory.Product.Name, out var saleInfo))
             {
                 inventory.Quantity -= saleInfo.Quantity;
             }
         }
+
+        var productDictByName = allProducts.ToDictionary(p => p.Name, p => p);
 
         var sale = new Sale
         {
             Date = DateTime.UtcNow.Date,
             TotalAmount = totalAmount,
             SaleItems = command.SaledProducts
-            .Select(product => new SaleItem 
-            {
-                ProductId = product.ProductId,
-                Quantity = product.Quantity,
-                Price = productPriceInfo[product.ProductId].Price,
-            })
-            .ToList()
+                .Where(product => productDictByName.ContainsKey(product.ProductName))
+                .Select(product => {
+                    var dbProduct = productDictByName[product.ProductName];
+                    return new SaleItem
+                    {
+                        ProductId = dbProduct.Id,
+                        Quantity = product.Quantity,
+                        Price = dbProduct.Price
+                    };
+                })
+                .ToList()
         };
 
         salesTrackDbContext.Sales.Add(sale);

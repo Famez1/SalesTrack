@@ -20,6 +20,9 @@ public class IndexModel : PageModel
     public Guid? CategoryId { get; set; }
 
     [BindProperty(SupportsGet = true)]
+    public string CategoryName { get; set; }
+
+    [BindProperty(SupportsGet = true)]
     public int? Limit { get; set; } = 10;
 
     [BindProperty(SupportsGet = true)]
@@ -34,9 +37,9 @@ public class IndexModel : PageModel
             ["direction"] = "1", 
         };
 
-        if (CategoryId.HasValue)
+        if (!string.IsNullOrEmpty(CategoryName))
         {
-            queryParams["CategoryId"] = CategoryId.Value.ToString();
+            queryParams["CategoryName"] = CategoryName;
         }
 
         var queryString = string.Join("&", queryParams

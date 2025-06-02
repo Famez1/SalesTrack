@@ -10,7 +10,7 @@ public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
     {
         _salesTrackDbContext = salesTrackDbContext;
 
-        RuleFor(x => x.CategoryId)
+        RuleFor(x => x.CategoryName)
             .Must(IsCategoryExists)
             .WithMessage("Категория не существует");
 
@@ -23,9 +23,9 @@ public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
             .WithMessage("Цена должна быть больше 0");
     }
 
-    private bool IsCategoryExists(Guid categoryId)
+    private bool IsCategoryExists(string categoryName)
     {
-        return _salesTrackDbContext.Categories.Any(x => x.Id == categoryId);
+        return _salesTrackDbContext.Categories.Any(x => x.Name == categoryName);
     }
 
     private bool IsProductExists(string productName)

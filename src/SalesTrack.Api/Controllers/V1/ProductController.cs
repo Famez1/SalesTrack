@@ -20,7 +20,6 @@ public class ProductController(
     /// <summary>
     /// Добавить товар в список товаров
     /// </summary>
-    [Authorize] 
     [HttpPost]
     public async Task<ApiResponseV1> AddProductAsync([FromBody] AddProductDto addProductDto)
     {
@@ -31,7 +30,6 @@ public class ProductController(
         return new ApiResponseV1();
     }
 
-    [Authorize]
     [HttpPatch("{id}")]
     public async Task<ApiResponseV1> UpdateProductAsync(
         [FromRoute] Guid id, 
@@ -43,11 +41,9 @@ public class ProductController(
         return new ApiResponseV1();
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<ApiResponseV1<GetProductsResponseDto>> GetProductsAsync(
-        [FromQuery] GetProductsDto getProductsDto,
-        CancellationToken cancellationToken)
+        [FromQuery] GetProductsDto getProductsDto)
     {
         var result = await mediator.Send(mapper.Map<GetProductsQuery>(getProductsDto));
 

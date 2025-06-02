@@ -19,6 +19,12 @@ public class GetCategoryQueryHandler(
 
         var categoriesQuery = salesTrackDbContext.Categories.AsQueryable();
 
+        if (!string.IsNullOrEmpty(query.Search))
+        {
+            categoriesQuery = categoriesQuery
+                .Where(x => EF.Functions.ILike(x.Name, $"%{query.Search}%"));
+        }
+
         categoriesQuery = OrderByDirection(categoriesQuery, query.Direction);
 
         var categories = await categoriesQuery

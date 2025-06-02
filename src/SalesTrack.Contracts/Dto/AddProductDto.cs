@@ -8,5 +8,5 @@ public class AddProductDto
 
     public string Unit {  get; set; }
 
-    public Guid CategoryId { get; set; }
+    public string CategoryName { get; set; }
 }

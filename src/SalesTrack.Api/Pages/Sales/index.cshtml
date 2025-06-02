@@ -34,8 +34,8 @@
                             <div id="saleItemsContainer">
                                 <div class="sale-item mb-3 border p-2">
                                     <div class="mb-2">
-                                        <label>Product ID</label>
-                                        <input type="text" name="NewSale.SaledProducts[0].ProductId" class="form-control" required />
+                                        <label>Товар</label>
+                                        <input type="text" name="NewSale.SaledProducts[0].ProductName" class="form-control" required />
                                     </div>
                                     <div>
                                         <label>Количество</label>
@@ -74,7 +74,7 @@
                                 @foreach (var item in sale.SaleItems)
                                 {
                                     <li>
-                                        ID: @item.ProductId<br />
+                                        Товар: @item.ProductName<br />
                                         Кол-во: @item.Quantity<br />
                                         Цена за шт: @item.UnitPrice.ToString("C")<br />
                                         Сумма: @item.TotalePrice.ToString("C")
@@ -112,7 +112,7 @@
             newItem.innerHTML = `
                     <div class="mb-2">
                         <label>Product ID</label>
-                        <input type="text" name="ProductId" class="form-control" required />
+                        <input type="text" name="ProductName" class="form-control" required />
                     </div>
                     <div>
                         <label>Количество</label>
