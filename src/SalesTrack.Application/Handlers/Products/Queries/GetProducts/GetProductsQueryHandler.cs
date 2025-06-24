@@ -22,9 +22,9 @@ public class GetProductsQueryHandler(
             .Include(x => x.Category)
             .AsQueryable();
 
-        if (!string.IsNullOrEmpty(query.CategoryName))
+        if (!string.IsNullOrEmpty(query.ProductName))
         {
-            productQuery = productQuery.Where(x => EF.Functions.ILike(x.Category.Name, $"%{query.CategoryName}%"));
+            productQuery = productQuery.Where(x => EF.Functions.ILike(x.Name, $"%{query.ProductName}%"));
         }
 
         productQuery = OrderByDirection(productQuery, query.Direction);

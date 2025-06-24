@@ -12,7 +12,8 @@ public class ProductMappingProfile : Profile
     {
         CreateMap<AddProductDto, AddProductCommand>();
 
-        CreateMap<GetProductsDto, GetProductsQuery>();
+        CreateMap<GetProductsDto, GetProductsQuery>()
+            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.CategoryName)); ;
 
         CreateMap<GetProductsQueryResult, GetProductsResponseDto>()
             .ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products));

@@ -12,9 +12,6 @@ public class SalesTrackDbContext : BaseDbContext, ISalesTrackDbContext
         : base(options)
     {
     }
-
-    public DbSet<User> User { get; set; }
-
     public DbSet<Category> Categories { get; set; }
 
     public DbSet<Inventory> Inventories { get; set; }

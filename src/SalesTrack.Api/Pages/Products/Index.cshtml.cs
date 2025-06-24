@@ -34,7 +34,8 @@ public class IndexModel : PageModel
         {
             ["limit"] = Limit?.ToString(),
             ["offset"] = Offset?.ToString(),
-            ["direction"] = "1", 
+            ["direction"] = "1",
+            ["CategoryName"] = string.Empty
         };
 
         if (!string.IsNullOrEmpty(CategoryName))

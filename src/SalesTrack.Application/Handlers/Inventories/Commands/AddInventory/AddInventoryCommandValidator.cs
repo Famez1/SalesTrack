@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using SalesTrack.Persistence;
 
 namespace SalesTrack.Application.Handlers.Inventories.Commands.AddInventory;
@@ -22,6 +23,6 @@ public class AddInventoryCommandValidator : AbstractValidator<AddInventoryComman
 
     private bool IsPruductExists(string productName)
     {
-        return _salesTrackDbContext.Products.Any(x => x.Name == productName);
+        return _salesTrackDbContext.Products.Where(x => EF.Functions.ILike(x.Name, productName)).Any();
     }
 }

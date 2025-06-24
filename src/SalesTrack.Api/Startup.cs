@@ -8,7 +8,6 @@ using SalesTrack.Api.Extensions;
 using SalesTrack.Api.Middleware;
 using SalesTrack.Application.Handlers.Products.Commands.AddProduct;
 using SalesTrack.Domain.Options;
-using SalesTrack.Infrastructure.Hubs;
 using Serilog;
 
 namespace SalesTrack.Api;
@@ -94,7 +93,6 @@ public class Startup
         {
             endpoints.MapRazorPages();
             endpoints.MapControllers();
-            endpoints.MapHub<TestHub>("/api/signalr");
         });
     }
 

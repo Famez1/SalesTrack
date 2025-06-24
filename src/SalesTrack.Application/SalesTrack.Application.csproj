@@ -22,11 +22,11 @@
     <ProjectReference Include="..\SalesTrack.Abstractions\SalesTrack.Abstractions.csproj" />
     <ProjectReference Include="..\SalesTrack.Common\SalesTrack.Common.csproj" />
     <ProjectReference Include="..\SalesTrack.Domain\SalesTrack.Domain.csproj" />
-    <ProjectReference Include="..\SalesTrack.Infrastructure\SalesTrack.Infrastructure.csproj" />
     <ProjectReference Include="..\SalesTrack.Persistence\SalesTrack.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Handlers\Products\Queries\" />
     <Folder Include="Jobs\" />
     <Folder Include="Services\" />
   </ItemGroup>

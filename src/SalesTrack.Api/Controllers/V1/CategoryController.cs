@@ -25,7 +25,7 @@ public class CategoryController(
         [FromBody] AddCategoryDto addCategoryDto, 
         CancellationToken cancellationToken)
     {
-        await mediator.Send(new AddCategoryCommand { Name = addCategoryDto.Name }, cancellationToken);
+        await mediator.Send(mapper.Map<AddCategoryCommand>(addCategoryDto), cancellationToken);
 
         return new ApiResponseV1();
     }

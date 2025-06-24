@@ -41,7 +41,6 @@
     <ProjectReference Include="..\SalesTrack.Common\SalesTrack.Common.csproj" />
     <ProjectReference Include="..\SalesTrack.Application\SalesTrack.Application.csproj" />
     <ProjectReference Include="..\SalesTrack.Contracts\SalesTrack.Contracts.csproj" />
-    <ProjectReference Include="..\SalesTrack.Infrastructure\SalesTrack.Infrastructure.csproj" />
     <ProjectReference Include="..\SalesTrack.Persistence\SalesTrack.Persistence.csproj" />
   </ItemGroup>
 
